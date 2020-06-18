@@ -5,12 +5,14 @@
  * For details, please see
  * https://pro.ant.design/docs/deploy
  */
+
+//  http://127.0.0.1:3000
 export default {
   dev: {
     '/api/': {
-      target: 'https://preview.pro.ant.design',
+      target: 'http://localhost:3000',
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: { '^/api/': '' },
     },
   },
   test: {

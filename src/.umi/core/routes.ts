@@ -61,10 +61,17 @@ const routes = [
             ]
           },
           {
-            "name": "list.table-list",
-            "icon": "table",
-            "path": "/list",
-            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__ListTableList' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/ListTableList'), loading: require('@/components/PageLoading/index').default}),
+            "path": "/userList",
+            "name": "用户管理",
+            "icon": "smile",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__userList' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/userList'), loading: require('@/components/PageLoading/index').default}),
+            "exact": true
+          },
+          {
+            "path": "/timeLine",
+            "name": "时间轴",
+            "icon": "smile",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__timeLine' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/timeLine'), loading: require('@/components/PageLoading/index').default}),
             "exact": true
           },
           {
