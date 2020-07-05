@@ -71,14 +71,12 @@ const ListContent = ({
 
 export const userList: FC<ListBasicListProps> = (props) => {
   const addBtn = useRef(null);
+
   const {
     loading,
     dispatch,
     userBasicList: { list }
   } = props;
-
-  console.log(props)
-
 
   const [done, setDone] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);

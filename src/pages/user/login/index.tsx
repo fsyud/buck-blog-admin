@@ -1,4 +1,3 @@
-import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
 import { Alert, Checkbox } from 'antd';
 import React, { useState } from 'react';
 import { Link, connect, Dispatch } from 'umi';
@@ -117,10 +116,6 @@ const Login: React.FC<LoginProps> = (props) => {
         </div>
         <Submit loading={submitting}>登录</Submit>
         <div className={styles.other}>
-          其他登录方式
-          <AlipayCircleOutlined className={styles.icon} />
-          <TaobaoCircleOutlined className={styles.icon} />
-          <WeiboCircleOutlined className={styles.icon} />
           <Link className={styles.register} to="/user/register">
             注册账户
           </Link>
