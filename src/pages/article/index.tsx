@@ -10,7 +10,6 @@ import {
   List,
   Menu,
   Modal,
-  Progress,
   Radio,
   Row,
 } from 'antd';
@@ -21,7 +20,7 @@ import { connect, Dispatch } from 'umi';
 import moment from 'moment';
 import OperationModal from './components/OperationModal';
 import { StateType } from './model';
-import { BasicListItemDataType } from './data.d';
+import { artDataList } from './data.d';
 import styles from './style.less';
 
 const RadioButton = Radio.Button;
@@ -29,8 +28,8 @@ const RadioGroup = Radio.Group;
 const { Search } = Input;
 
 interface ListBasicListThreeProps {
-  listBasicListThree: StateType;
-  dispatch: Dispatch<any>;
+  article: StateType;
+  dispatch: Dispatch;
   loading: boolean;
 }
 
@@ -47,39 +46,41 @@ const Info: FC<{
 );
 
 const ListContent = ({
-  data: { owner, createdAt, percent, status },
+  data: { title, desc, create_time  },
 }: {
-  data: BasicListItemDataType;
+  data: artDataList;
 }) => (
   <div className={styles.listContent}>
     <div className={styles.listContentItem}>
-      <span>Owner</span>
-      <p>{owner}</p>
+      <span>标题</span>
+      <p>{title}</p>
     </div>
     <div className={styles.listContentItem}>
-      <span>开始时间</span>
-      <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+      <span>描述</span>
+      <p>{desc}</p>
     </div>
     <div className={styles.listContentItem}>
-      <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
+      <span>创建时间</span>
+      <p>{moment(create_time).format('YYYY-MM-DD HH:mm')}</p>
     </div>
   </div>
 );
 
-export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
+export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
   const addBtn = useRef(null);
   const {
     loading,
     dispatch,
-    listBasicListThree: { list },
+    article: { list }
   } = props;
+
   const [done, setDone] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
-  const [current, setCurrent] = useState<Partial<BasicListItemDataType> | undefined>(undefined);
+  const [current, setCurrent] = useState<Partial<artDataList> | undefined>(undefined);
 
   useEffect(() => {
     dispatch({
-      type: 'listBasicListThree/fetch',
+      type: 'article/fetch',
       payload: {
         count: 5,
       },
@@ -98,7 +99,7 @@ export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
     setCurrent(undefined);
   };
 
-  const showEditModal = (item: BasicListItemDataType) => {
+  const showEditModal = (item: artDataList) => {
     setVisible(true);
     setCurrent(item);
   };
@@ -110,7 +111,7 @@ export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
     });
   };
 
-  const editAndDelete = (key: string, currentItem: BasicListItemDataType) => {
+  const editAndDelete = (key: string, currentItem: artDataList) => {
     if (key === 'edit') showEditModal(currentItem);
     else if (key === 'delete') {
       Modal.confirm({
@@ -118,7 +119,7 @@ export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
         content: '确定删除该任务吗？',
         okText: '确认',
         cancelText: '取消',
-        onOk: () => deleteItem(currentItem.id),
+        onOk: () => deleteItem(currentItem._id),
       });
     }
   };
@@ -135,7 +136,7 @@ export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
   );
 
   const MoreBtn: React.FC<{
-    item: BasicListItemDataType;
+    item: artDataList;
   }> = ({ item }) => (
     <Dropdown
       overlay={
@@ -171,8 +172,8 @@ export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
     setVisible(false);
   };
 
-  const handleSubmit = (values: BasicListItemDataType) => {
-    const id = current ? current.id : '';
+  const handleSubmit = (values: artDataList) => {
+    const id = current ? current._id : '';
 
     setAddBtnblur();
 
@@ -241,9 +242,9 @@ export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
                   ]}
                 >
                   <List.Item.Meta
-                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                    title={<a href={item.href}>{item.title}</a>}
-                    description={item.subDescription}
+                    avatar={<Avatar src={item.img_url} shape="square" size="large" />}
+                    title={<a href='./'>{item.title}</a>}
+                    description={item.desc}
                   />
                   <ListContent data={item} />
                 </List.Item>
@@ -267,15 +268,15 @@ export const ListBasicListThree: FC<ListBasicListThreeProps> = (props) => {
 
 export default connect(
   ({
-    listBasicListThree,
+    article,
     loading,
   }: {
-    listBasicListThree: StateType;
+    article: StateType;
     loading: {
       models: { [key: string]: boolean };
     };
   }) => ({
-    listBasicListThree,
-    loading: loading.models.listBasicListThree,
+    article,
+    loading: loading.models.article,
   }),
-)(ListBasicListThree);
+)(ArticleList);

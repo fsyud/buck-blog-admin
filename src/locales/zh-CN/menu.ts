@@ -50,5 +50,6 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
   'menu.用户管理': '用户管理',
-  'menu.时间轴': '时间轴'
+  'menu.时间轴': '时间轴',
+  'menu.文章': '文章'
 };

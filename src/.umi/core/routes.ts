@@ -63,15 +63,22 @@ const routes = [
           {
             "path": "/userList",
             "name": "用户管理",
-            "icon": "smile",
+            "icon": "UserOutlined",
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__userList' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/userList'), loading: require('@/components/PageLoading/index').default}),
             "exact": true
           },
           {
             "path": "/timeLine",
             "name": "时间轴",
-            "icon": "smile",
+            "icon": "ClusterOutlined",
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__timeLine' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/timeLine'), loading: require('@/components/PageLoading/index').default}),
+            "exact": true
+          },
+          {
+            "path": "/article",
+            "name": "文章",
+            "icon": "FileOutlined",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__article' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/article'), loading: require('@/components/PageLoading/index').default}),
             "exact": true
           },
           {

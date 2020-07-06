@@ -4,11 +4,10 @@ import { history, Reducer, Effect } from 'umi';
 import { fakeAccountLogin } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+import { BasicListItemLoginType } from '@/pages/userList/data.d'
 
 export interface StateType {
-  status?: 'ok' | 'error';
-  type?: string;
-  currentAuthority?: 'user' | 'guest' | 'admin';
+  successLogin: Partial<BasicListItemLoginType>;
 }
 
 export interface LoginModelType {
@@ -27,7 +26,7 @@ const Model: LoginModelType = {
   namespace: 'login',
 
   state: {
-    status: undefined,
+    successLogin: {},
   },
 
   effects: {
@@ -37,13 +36,15 @@ const Model: LoginModelType = {
         type: 'changeLoginStatus',
         payload: response,
       });
+
       // Login successfully
-      if (response.status === 'ok') {
+      if (Object.keys(response.data).length > 0) {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
+          console.log(redirectUrlParams)
           if (redirectUrlParams.origin === urlParams.origin) {
             redirect = redirect.substr(urlParams.origin.length);
             if (redirect.match(/^\/.*#/)) {
@@ -54,6 +55,7 @@ const Model: LoginModelType = {
             return;
           }
         }
+        console.log(redirect)
         history.replace(redirect || '/');
       }
     },
@@ -77,8 +79,7 @@ const Model: LoginModelType = {
       setAuthority(payload.currentAuthority);
       return {
         ...state,
-        status: payload.status,
-        type: payload.type,
+        successLogin: payload,
       };
     },
   },

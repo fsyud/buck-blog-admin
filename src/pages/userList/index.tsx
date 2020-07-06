@@ -20,6 +20,7 @@ import { connect, Dispatch } from 'umi';
 import OperationModal from './components/OperationModal';
 import { StateType } from './model';
 import { ListItem } from './data.d';
+import { timestampToTime } from '@/utils/tool'
 import styles from './style.less';
 
 const RadioButton = Radio.Button;
@@ -60,7 +61,7 @@ const ListContent = ({
     </div>
     <div className={styles.listContentItem}>
       <span>创建时间</span>
-      <p>{create_time}</p>
+      <p>{timestampToTime(create_time, true)}</p>
     </div>
     <div className={styles.listContentItem}>
       <span>手机号码</span>

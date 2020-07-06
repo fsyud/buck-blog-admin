@@ -37,7 +37,6 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
 
     const isToken = sessionStorageGet('userInfo')
 
-    console.log(currentUser)
     const queryString = stringify({
       redirect: window.location.href,
     });

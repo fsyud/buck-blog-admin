@@ -1,19 +1,21 @@
-import { Alert, Checkbox } from 'antd';
-import React, { useState } from 'react';
+import { Alert, Checkbox, message } from 'antd';
+import React, { useState, useEffect } from 'react';
 import { Link, connect, Dispatch } from 'umi';
 import { StateType } from '@/models/login';
 import { LoginParamsType } from '@/services/login';
 import { ConnectState } from '@/models/connect';
 import LoginForm from './components/Login';
+import { sessionStorageSet } from '@/utils/tool'
 
 import styles from './style.less';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginForm;
 interface LoginProps {
   dispatch: Dispatch;
-  userLogin: StateType;
   submitting?: boolean;
+  userLogin: StateType;
 }
+
 
 const LoginMessage: React.FC<{
   content: string;
@@ -29,39 +31,54 @@ const LoginMessage: React.FC<{
 );
 
 const Login: React.FC<LoginProps> = (props) => {
-  const { userLogin = {}, submitting } = props;
-  const { status, type: loginType } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState<string>('account');
+  const [ warn, setWarn ] = useState<string>('');
+
+  useEffect(() => {
+    const loginSta = props.userLogin && props.userLogin.successLogin
+    if(loginSta && loginSta.message){
+      setWarn(loginSta.message)
+      // message(loginSta.message)
+    }
+
+    if(loginSta && loginSta.data) {
+      if(Object.keys(loginSta.data)) {
+        sessionStorageSet('userInfo', loginSta.data)
+      }
+    }
+  },[props.userLogin])
 
   const handleSubmit = (values: LoginParamsType) => {
     const { dispatch } = props;
     dispatch({
       type: 'login/login',
-      payload: { ...values, type },
+      payload: { ...values },
     });
   };
+
+  // 邮箱格式验证
+  const emailRules = [
+    { required: true, message: '请输入邮箱！' },
+    {
+      pattern: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
+      message: '请输入正确的邮箱格式！',
+    },
+  ];
+
   return (
     <div className={styles.main}>
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
+        {warn ? <LoginMessage content={warn} /> : <div></div>}
         <Tab key="account" tab="账户密码登录">
-          {status === 'error' && loginType === 'account' && !submitting && (
-            <LoginMessage content="账户或密码错误（admin/ant.design）" />
-          )}
-
           <UserName
-            name="userName"
-            placeholder="用户名: admin or user"
-            rules={[
-              {
-                required: true,
-                message: '请输入用户名!',
-              },
-            ]}
+            name="email"
+            placeholder="请输入您的邮箱地址"
+            rules={emailRules}
           />
           <Password
             name="password"
-            placeholder="密码: ant.design"
+            placeholder="请输入正确的密码"
             rules={[
               {
                 required: true,
@@ -71,9 +88,6 @@ const Login: React.FC<LoginProps> = (props) => {
           />
         </Tab>
         <Tab key="mobile" tab="手机号登录">
-          {status === 'error' && loginType === 'mobile' && !submitting && (
-            <LoginMessage content="验证码错误" />
-          )}
           <Mobile
             name="mobile"
             placeholder="手机号"
@@ -114,7 +128,7 @@ const Login: React.FC<LoginProps> = (props) => {
             忘记密码
           </a>
         </div>
-        <Submit loading={submitting}>登录</Submit>
+        <Submit>登录</Submit>
         <div className={styles.other}>
           <Link className={styles.register} to="/user/register">
             注册账户
@@ -125,7 +139,6 @@ const Login: React.FC<LoginProps> = (props) => {
   );
 };
 
-export default connect(({ login, loading }: ConnectState) => ({
+export default connect(({ login }: { login: ConnectState }) => ({
   userLogin: login,
-  submitting: loading.effects['login/login'],
 }))(Login);

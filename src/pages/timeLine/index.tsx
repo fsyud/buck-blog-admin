@@ -16,8 +16,8 @@ import {
 import { findDOMNode } from 'react-dom';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect, Dispatch } from 'umi';
-import moment from 'moment';
 import OperationModal from './components/OperationModal';
+import { timestampToTime } from '@/utils/tool'
 import { StateType } from './model';
 import { timeListItem } from './data.d';
 import styles from './style.less';
@@ -51,28 +51,24 @@ const ListContent = ({
 }) => (
   <div className={styles.listContent}>
     <div className={styles.listContentItem}>
-      <span>Owner</span>
+      <span>标题</span>
       <p>{title}</p>
     </div>
     <div className={styles.listContentItem}>
-      <span>content</span>
+      <span>内容</span>
       <p>{content}</p>
     </div>
     <div className={styles.listContentItem}>
-      <span>state</span>
+      <span>状态</span>
       <p>{state}</p>
     </div>
     <div className={styles.listContentItem}>
-      <span>start_time</span>
-      <p>{start_time}</p>
+      <span>创建时间</span>
+      <p>{timestampToTime(start_time, true)}</p>
     </div>
     <div className={styles.listContentItem}>
-      <span>end_time</span>
-      <p>{end_time}</p>
-    </div>
-    <div className={styles.listContentItem}>
-      <span>update_time</span>
-      <p>{update_time}</p>
+      <span>结束时间</span>
+      <p>{timestampToTime(end_time, true)}</p>
     </div>
   </div>
 );
@@ -85,8 +81,6 @@ export const timeLine: FC<ListBasicListProps> = (props) => {
     dispatch,
     timeLineList: { list },
   } = props;
-
-  console.log(props)
 
   const [done, setDone] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
@@ -205,13 +199,7 @@ export const timeLine: FC<ListBasicListProps> = (props) => {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="我的待办" value="8个任务" bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="本周任务平均处理时间" value="32分钟" bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="本周完成任务数" value="24个任务" />
+                <Info title="列表数" value={list.length} bordered />
               </Col>
             </Row>
           </Card>
