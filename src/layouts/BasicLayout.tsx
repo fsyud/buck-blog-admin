@@ -53,7 +53,8 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
 const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
   menuList.map((item) => {
     const localItem = { ...item, children: item.children ? menuDataRender(item.children) : [] };
-    return Authorized.check(item.authority, localItem, null) as MenuDataItem;
+    // return Authorized.check(item.authority, localItem, null) as MenuDataItem;
+    return localItem as MenuDataItem;
   });
 
 const defaultFooterDom = (
@@ -159,9 +160,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       {...props}
       {...settings}
     >
-      <Authorized authority={authorized!.authority} noMatch={noMatch}>
-        {children}
-      </Authorized>
+      {/* <Authorized authority={authorized!.authority} noMatch={noMatch}>
+      </Authorized> */}
+      {children}
     </ProLayout>
   );
 };
