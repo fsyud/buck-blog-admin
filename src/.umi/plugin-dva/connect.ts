@@ -9,8 +9,10 @@ import { Location, LocationState, History } from 'history';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/models/global';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/models/login';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/models/setting';
+export * from '/Volumes/WorkSpace/Buck-blog-admin/src/models/tag';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/models/user';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/art/article/model';
+export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/art/createarticle/model';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/timeLine/model';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/userList/model';
 
