@@ -1,10 +1,11 @@
 import { Effect, Reducer } from 'umi';
-import { queryTimeLine } from './service';
+import { queryTimeLine, addTimeLine, updateTimeTimeline, delTimeline } from './service';
 
-import { timeListItem } from './data.d';
+import { timeListItem, BasicListItemDataType } from './data.d';
 
 export interface StateType {
   list: timeListItem[];
+  info: Partial<BasicListItemDataType>;
 }
 
 export interface ModelType {
@@ -12,11 +13,13 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetch: Effect;
-    // submit: Effect;
+    addLine: Effect;
+    updateLine: Effect;
+    delLine: Effect;
   };
   reducers: {
     queryList: Reducer<StateType>;
-    appendList: Reducer<StateType>;
+    Info: Reducer<StateType>;
   };
 }
 
@@ -25,6 +28,7 @@ const Model: ModelType = {
 
   state: {
     list: [],
+    info: {}
   },
 
   effects: {
@@ -37,32 +41,46 @@ const Model: ModelType = {
         });
       }
     },
-    // *submit({ payload }, { call, put }) {
-    //   let callback;
-    //   if (payload.id) {
-    //     callback = Object.keys(payload).length === 1 ? removeFakeList : updateFakeList;
-    //   } else {
-    //     callback = addFakeList;
-    //   }
-    //   const response = yield call(callback, payload); // post
-    //   yield put({
-    //     type: 'queryList',
-    //     payload: response,
-    //   });
-    // },
+    *addLine({ payload }, { call, put }) {
+      const response = yield call(addTimeLine, payload);
+      if(response && response.data) {
+        yield put({
+          type: 'Info',
+          payload: response,
+        });
+      }
+    },
+    *updateLine({ payload }, { call, put }) {
+      const response = yield call(updateTimeTimeline, payload);
+      if(response && response.data) {
+        yield put({
+          type: 'Info',
+          payload: response,
+        });
+      }
+    },
+    *delLine({ payload }, { call, put }) {
+      const response = yield call(delTimeline, payload);
+      if(response && response.data) {
+        yield put({
+          type: 'Info',
+          payload: response,
+        });
+      }
+    },
   },
 
   reducers: {
-    queryList(state, action) {
+    queryList(state = { list: [], info: {} }, action) {
       return {
         ...state,
         list: action.payload,
       };
     },
-    appendList(state = { list: [] }, action) {
+    Info(state = { list: [], info: {} }, action) {
       return {
         ...state,
-        list: state.list.concat(action.payload),
+        info: action.payload,
       };
     },
   },

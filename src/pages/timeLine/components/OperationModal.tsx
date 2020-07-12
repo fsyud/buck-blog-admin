@@ -9,7 +9,7 @@ interface OperationModalProps {
   visible: boolean;
   current: Partial<timeListItem> | undefined;
   onDone: () => void;
-  onSubmit: (values: timeListItem) => void;
+  onSubmit: (values: timeListItem, operate: string) => void;
   onCancel: () => void;
 }
 
@@ -33,7 +33,8 @@ const OperationModal: FC<OperationModalProps> = (props) => {
     if (current) {
       form.setFieldsValue({
         ...current,
-        createdAt: current.createdAt ? moment(current.createdAt) : null,
+        start_time: current.start_time ? moment(current.start_time) : null,
+        end_time: current.end_time ? moment(current.end_time) : null,
       });
     }
   }, [props.current]);
@@ -44,8 +45,9 @@ const OperationModal: FC<OperationModalProps> = (props) => {
   };
 
   const handleFinish = (values: { [key: string]: any }) => {
+    const operationState = current ? 'edit' : 'add'
     if (onSubmit) {
-      onSubmit(values as timeListItem);
+      onSubmit(values as timeListItem, operationState);
     }
   };
 
@@ -73,37 +75,50 @@ const OperationModal: FC<OperationModalProps> = (props) => {
       <Form {...formLayout} form={form} onFinish={handleFinish}>
         <Form.Item
           name="title"
-          label="任务名称"
-          rules={[{ required: true, message: '请输入任务名称' }]}
+          label="标题"
+          rules={[{ required: true, message: '请输入标题' }]}
         >
           <Input placeholder="请输入" />
         </Form.Item>
         <Form.Item
-          name="createdAt"
+          name="state"
+          label="时间轴状态"
+          rules={[{ required: true, message: '请选择项目状态' }]}
+        >
+          <Select placeholder="请选择">
+            <Select.Option value="1">已完成</Select.Option>
+            <Select.Option value="2">正在进行</Select.Option>
+            <Select.Option value="3">未完成</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="start_time"
           label="开始时间"
           rules={[{ required: true, message: '请选择开始时间' }]}
         >
           <DatePicker
             showTime
+            style={{ width: '100%' }}
+            format="YYYY-MM-DD"
             placeholder="请选择"
-            format="YYYY-MM-DD HH:mm:ss"
+          />
+        </Form.Item>
+        <Form.Item
+          name="end_time"
+          label="结束时间"
+          rules={[{ required: true, message: '请选择结束时间' }]}
+        >
+          <DatePicker
+            showTime
+            placeholder="请选择"
+            format="YYYY-MM-DD"
             style={{ width: '100%' }}
           />
         </Form.Item>
         <Form.Item
-          name="owner"
-          label="任务负责人"
-          rules={[{ required: true, message: '请选择任务负责人' }]}
-        >
-          <Select placeholder="请选择">
-            <Select.Option value="付晓晓">付晓晓</Select.Option>
-            <Select.Option value="周毛毛">周毛毛</Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          name="subDescription"
-          label="产品描述"
-          rules={[{ message: '请输入至少五个字符的产品描述！', min: 5 }]}
+          name="content"
+          label="项目描述"
+          rules={[{ required: true, message: '请输入至少五个字的项目描述！', min: 5 }]}
         >
           <TextArea rows={4} placeholder="请输入至少五个字符" />
         </Form.Item>

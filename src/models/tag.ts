@@ -1,10 +1,10 @@
 import { Effect, Reducer } from 'umi';
 import { queryTagList } from '@/services/tag';
 
-import { tagDataList } from './common.d';
+import { tag_list } from './common.d';
 
 export interface tagStateType {
-  tagList: Partial<tagDataList>;
+  tagList: tag_list[];
 }
 
 export interface tagModelType {
@@ -22,16 +22,16 @@ const tagModel: tagModelType = {
   namespace: 'tags',
 
   state: {
-    tagList: {},
+    tagList: [],
   },
 
   effects: {
     *getTagList({ payload }, { call, put }) {
       const response = yield call(queryTagList, payload);
-      if(response && response.data) {
+      if(response && response.data && response.data.list) {
         yield put({
           type: 'queryList',
-          payload: response,
+          payload: response.data.list || [],
         });
       }
     },

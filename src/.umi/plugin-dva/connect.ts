@@ -13,6 +13,7 @@ export * from '/Volumes/WorkSpace/Buck-blog-admin/src/models/tag';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/models/user';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/art/article/model';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/art/createarticle/model';
+export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/project/model';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/timeLine/model';
 export * from '/Volumes/WorkSpace/Buck-blog-admin/src/pages/userList/model';
 

@@ -1,16 +1,16 @@
-import React, { FC, useEffect } from 'react';
-import moment from 'moment';
-import { Modal, Result, Button, Form, DatePicker, Input, Select } from 'antd';
-import { BasicListItemDataType } from '../data.d';
+import React, { FC, useEffect, useState} from 'react';
+import { Modal, Result, Button, Form, Radio, Input, Select } from 'antd';
+import { artDetailList, updateArticleParam } from '../data.d';
 import styles from '../style.less';
 
 interface OperationModalProps {
   done: boolean;
   visible: boolean;
-  current: Partial<BasicListItemDataType> | undefined;
+  current: Partial<artDetailList> | undefined;
   onDone: () => void;
-  onSubmit: (values: BasicListItemDataType) => void;
+  onSubmit: (values: updateArticleParam) => void;
   onCancel: () => void;
+  tagList: any;
 }
 
 const { TextArea } = Input;
@@ -23,6 +23,9 @@ const OperationModal: FC<OperationModalProps> = (props) => {
   const [form] = Form.useForm();
   const { done, visible, current, onDone, onCancel, onSubmit } = props;
 
+  const [curTag, setCurTag] = useState<any>([]);
+  const [curTagList, setCurTagList] = useState<any>([]);
+
   useEffect(() => {
     if (form && !visible) {
       form.resetFields();
@@ -30,13 +33,21 @@ const OperationModal: FC<OperationModalProps> = (props) => {
   }, [props.visible]);
 
   useEffect(() => {
-    if (current) {
+    if (current && current.data) {
       form.setFieldsValue({
-        ...current,
-        createdAt: current.createdAt ? moment(current.createdAt) : null,
+        ...current.data,
       });
+
+      const curTags = current.data.tags.map(s => s.name)
+
+      setCurTag(curTags)
     }
   }, [props.current]);
+
+  // 标签传值
+  useEffect(() => {
+    setCurTagList(props.tagList)
+  },[props.tagList]);
 
   const handleSubmit = () => {
     if (!form) return;
@@ -45,8 +56,14 @@ const OperationModal: FC<OperationModalProps> = (props) => {
 
   const handleFinish = (values: { [key: string]: any }) => {
     if (onSubmit) {
-      onSubmit(values as BasicListItemDataType);
+      const curVal = Object.assign({}, values, {tags: curTag})
+      onSubmit(curVal as updateArticleParam);
     }
+  };
+
+   // 标签选择
+   const handleCurTag = (val: any): void => {
+    setCurTag(val);
   };
 
   const modalFooter = done
@@ -73,37 +90,84 @@ const OperationModal: FC<OperationModalProps> = (props) => {
       <Form {...formLayout} form={form} onFinish={handleFinish}>
         <Form.Item
           name="title"
-          label="任务名称"
-          rules={[{ required: true, message: '请输入任务名称' }]}
+          label="文章名称"
+          rules={[{ required: true, message: '请输入文章名称' }]}
         >
           <Input placeholder="请输入" />
         </Form.Item>
         <Form.Item
-          name="createdAt"
-          label="开始时间"
-          rules={[{ required: true, message: '请选择开始时间' }]}
+          name="img_url"
+          label="封面连接"
+          rules={[{ required: true, message: '请输入封面连接' }]}
         >
-          <DatePicker
-            showTime
-            placeholder="请选择"
-            format="YYYY-MM-DD HH:mm:ss"
-            style={{ width: '100%' }}
-          />
+          <Input placeholder="请输入" />
         </Form.Item>
         <Form.Item
-          name="owner"
-          label="任务负责人"
-          rules={[{ required: true, message: '请选择任务负责人' }]}
+          name="author"
+          label="作者"
+          rules={[{ required: true, message: '请输入作者' }]}
         >
-          <Select placeholder="请选择">
-            <Select.Option value="付晓晓">付晓晓</Select.Option>
-            <Select.Option value="周毛毛">周毛毛</Select.Option>
+          <Input placeholder="请输入" />
+        </Form.Item>
+        <Form.Item
+          label="标签"
+          rules={[{ required: true, message: '请输入任务名称' }]}
+        >
+          <Select
+            allowClear
+            mode="multiple"
+            style={{ minWidth: 200 }}
+            placeholder="标签"
+            value={curTag}
+            onChange={handleCurTag}
+          >
+            {curTagList.map((s:any) => (
+              <Select.Option key={s._id} value={s._id}>
+                {s.name}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item
-          name="subDescription"
-          label="产品描述"
-          rules={[{ message: '请输入至少五个字符的产品描述！', min: 5 }]}
+          name="keyword"
+          label="关键字"
+          rules={[{ required: true, message: '请输入关键字' }]}
+        >
+          <Input placeholder="请输入" />
+        </Form.Item>
+        <Form.Item
+          name="type"
+          label="发布状态"
+          rules={[{ required: true, message: '请选择项目状态' }]}
+        >
+          <Radio.Group>
+            <Radio.Button value="0">草稿</Radio.Button>
+            <Radio.Button value="1">发布</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          name="origin"
+          label="文章转载状态"
+          rules={[{ required: true, message: '请选择文章转载状态' }]}
+        >
+          <Radio.Group>
+            <Radio.Button value="1">普通文章</Radio.Button>
+            <Radio.Button value="2">简历</Radio.Button>
+            <Radio.Button value="3">管理员介绍</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          name="desc"
+          label="描述"
+          rules={[{ required: true, message: '请输入至少五个字的项目描述！', min: 5 }]}
+        >
+          <TextArea rows={4} placeholder="请输入至少五个字符" />
+        </Form.Item>
+
+        <Form.Item
+          name="content"
+          label="内容"
+          rules={[{ required: true, message: '请输入至少五个字的项目描述！', min: 5 }]}
         >
           <TextArea rows={4} placeholder="请输入至少五个字符" />
         </Form.Item>

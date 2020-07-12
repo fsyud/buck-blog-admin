@@ -28,12 +28,10 @@ const Model: ModelType = {
   effects: {
     *addArticle({ payload }, { call, put }) {
       const response = yield call(addArticle, payload);
-      if(response && response.data) {
-        yield put({
-          type: 'queryList',
-          payload: response,
-        });
-      }
+      yield put({
+        type: 'queryList',
+        payload: response
+      });
     },
   },
 

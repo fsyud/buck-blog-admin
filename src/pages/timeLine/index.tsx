@@ -11,13 +11,14 @@ import {
   Modal,
   Radio,
   Row,
+  message
 } from 'antd';
 
+import moment from 'moment';
 import { findDOMNode } from 'react-dom';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect, Dispatch } from 'umi';
 import OperationModal from './components/OperationModal';
-import { timestampToTime } from '@/utils/tool'
 import { StateType } from './model';
 import { timeListItem } from './data.d';
 import styles from './style.less';
@@ -64,11 +65,11 @@ const ListContent = ({
     </div>
     <div className={styles.listContentItem}>
       <span>创建时间</span>
-      <p>{timestampToTime(start_time, true)}</p>
+      <p>{moment(start_time).format('YYYY-MM-DD')}</p>
     </div>
     <div className={styles.listContentItem}>
       <span>结束时间</span>
-      <p>{timestampToTime(end_time, true)}</p>
+      <p>{moment(end_time).format('YYYY-MM-DD')}</p>
     </div>
   </div>
 );
@@ -79,7 +80,7 @@ export const timeLine: FC<ListBasicListProps> = (props) => {
   const {
     loading,
     dispatch,
-    timeLineList: { list },
+    timeLineList: { list, info },
   } = props;
 
   const [done, setDone] = useState<boolean>(false);
@@ -87,13 +88,21 @@ export const timeLine: FC<ListBasicListProps> = (props) => {
   const [current, setCurrent] = useState<Partial<timeListItem> | undefined>(undefined);
 
   useEffect(() => {
+    initList()
+  }, [1]);
+
+  useEffect(() => {
+    if(info.message) {
+      message.info(info.message)
+      initList()
+    }
+  }, [info])
+
+  const initList = (): void => {
     dispatch({
       type: 'timeLineList/fetch',
-      payload: {
-        count: 5,
-      },
     });
-  }, [1]);
+  }
 
   const paginationProps = {
     showSizeChanger: true,
@@ -114,7 +123,7 @@ export const timeLine: FC<ListBasicListProps> = (props) => {
 
   const deleteItem = (id: string) => {
     dispatch({
-      type: 'listBasicListTwo/submit',
+      type: 'timeLineList/delLine',
       payload: { id },
     });
   };
@@ -180,16 +189,21 @@ export const timeLine: FC<ListBasicListProps> = (props) => {
     setVisible(false);
   };
 
-  const handleSubmit = (values: timeListItem) => {
+  const handleSubmit = (values: timeListItem, operate: string) => {
     const id = current ? current._id : '';
-
+    if(operate === 'edit') {
+      dispatch({
+        type: 'timeLineList/updateLine',
+        payload: { id, ...values },
+      });
+    } else {
+      dispatch({
+        type: 'timeLineList/addLine',
+        payload: { ...values },
+      });
+    }
     setAddBtnblur();
-
     setDone(true);
-    dispatch({
-      type: 'listBasicListTwo/submit',
-      payload: { id, ...values },
-    });
   };
 
   return (

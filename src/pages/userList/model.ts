@@ -1,10 +1,11 @@
 import { Effect, Reducer } from 'umi';
-import { queryUserList } from './service';
+import { queryUserList, delUser } from './service';
 
-import { ListItem } from './data.d';
+import { ListItem, BasicListItemDataType} from './data.d';
 
 export interface StateType {
   list: ListItem[];
+  info: Partial<BasicListItemDataType>;
 }
 
 export interface ModelType {
@@ -12,10 +13,11 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetch: Effect;
+    delete: Effect;
   };
   reducers: {
     queryList: Reducer<StateType>;
-    appendList: Reducer<StateType>;
+    dleteInfo: Reducer<StateType>;
   };
 }
 
@@ -24,6 +26,7 @@ const Model: ModelType = {
 
   state: {
     list: [],
+    info: {}
   },
 
   effects: {
@@ -36,19 +39,26 @@ const Model: ModelType = {
         });
       }
     },
+    *delete({ payload }, { call, put }) {
+      const response = yield call(delUser, payload);
+      yield put({
+        type: 'dleteInfo',
+        payload: response
+      });
+    },
   },
 
   reducers: {
-    queryList(state, action) {
+    queryList(state = { list: [], info: {} }, action) {
       return {
         ...state,
         list: action.payload,
       };
     },
-    appendList(state = { list: [] }, action) {
+    dleteInfo(state = { list: [], info: {} }, action) {
       return {
         ...state,
-        list: state.list.concat(action.payload),
+        info: action.payload,
       };
     },
   },

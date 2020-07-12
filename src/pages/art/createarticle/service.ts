@@ -1,17 +1,23 @@
 import request from 'umi-request';
 
+
 interface ParamsType {
-  title?: string;
-  author?: string;
+  title: string;
+  author: string;
   content: string;
   desc: string;
-  tags: string;
+  tags: Array<string>;
+  type?: string;
+  origin?: string;
+  state?: string;
+  img_url?: string;
 }
 
 // 添加文章
 export async function addArticle(params: ParamsType) {
   return request('/api/addArticle', {
-    params,
+    method: 'POST',
+    data: params,
   });
 }
 

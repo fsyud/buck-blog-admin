@@ -1,52 +1,65 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect } from 'react';
 import { connect, Dispatch } from 'umi';
-import { Input, Select, Alert, Button} from 'antd'
+import { Input, Select, Alert, Button, message } from 'antd';
 import SimpleMDE from 'simplemde';
 import marked from 'marked';
 import highlight from 'highlight.js';
 import styles from './style.less';
-import { StateType } from './model'
-import { tagStateType } from '@/models/tag'
-import './marked.css'
+import { StateType } from './model';
+import { articleDetailist } from './data.d'
+import { tagStateType } from '@/models/tag';
+import './marked.css';
 import 'simplemde/dist/simplemde.min.css';
 import './monokai_sublime.css';
 const { TextArea } = Input;
 
 interface createArticleProps {
   dispatch: Dispatch;
-  article_list: StateType;
-  tag_list: tagStateType;
+  article_list: articleDetailist;
+  tagList: tagStateType;
 }
 
 // 富文本工具配置
 const tetxToolBar = [
-  'bold', 'italic', 'strikethrough', 'heading',
-  'code', 'quote', 'unordered-list', 'ordered-list',
-  'clean-block', 'link', 'image', 'table', 'horizontal-rule',
-  'preview', 'side-by-side', 'fullscreen', 'guide'
-]
+  'bold',
+  'italic',
+  'strikethrough',
+  'heading',
+  'code',
+  'quote',
+  'unordered-list',
+  'ordered-list',
+  'clean-block',
+  'link',
+  'image',
+  'table',
+  'horizontal-rule',
+  'preview',
+  'side-by-side',
+  'fullscreen',
+  'guide',
+];
 
-
-export const createArticle: FC<createArticleProps> = (props) => {
+export const createArticle: FC<createArticleProps> = props => {
   const {
     dispatch,
-    article_list: { },
-    tag_list: { }
+    article_list,
+    tagList: { tagList },
   } = props;
 
-  const [ curTitle, setCurTitle ] = useState<string>('')
-  const [ curAuthor, setCurAuthor ] = useState<string>('')
-  const [ curDesc, setCurDesc ] = useState<string>('')
-  const [ curKeyWord, setCurKeyWord ] = useState<string>('')
-  const [ curImgUrl, setCurImgUrl ] = useState<string>('')
-  const [ curIssue, setCurIssue ] = useState<string>('1')
-  const [ curArticleType, setCurArticleType ] = useState<string>('1')
-  const [ curReship, setCurReship ] = useState<string>('0')
-  const [ smde, setSmde ] = useState<any>()
-  const [ curTag, setCurTag ] = useState<any>()
+  const [curTitle, setCurTitle] = useState<string>('');
+  const [curAuthor, setCurAuthor] = useState<string>('buck');
+  const [curDesc, setCurDesc] = useState<string>('');
+  const [curKeyWord, setCurKeyWord] = useState<string>('');
+  const [curImgUrl, setCurImgUrl] = useState<string>('');
+  const [curIssue, setCurIssue] = useState<string>('1');
+  const [curArticleType, setCurArticleType] = useState<string>('1');
+  const [curReship, setCurReship] = useState<string>('0');
+  const [smde, setSmde] = useState<any>();
+  const [curTag, setCurTag] = useState<any>([]);
 
   useEffect(() => {
-    highlight.initHighlightingOnLoad()
+    highlight.initHighlightingOnLoad();
     const cursmde = new SimpleMDE({
       element: document.querySelector('#editor'),
       autofocus: true,
@@ -68,73 +81,90 @@ export const createArticle: FC<createArticleProps> = (props) => {
         });
       },
     });
-    setSmde(cursmde)
-  }, [])
+    setSmde(cursmde);
+  }, []);
 
   // 请求标签
   useEffect(() => {
     dispatch({
       type: 'tags/getTagList',
-    })
-    const {tag_list}  = props
+    });
+  }, [1]);
 
-    console.log(props.tag_list.data)
-  }, [1])
+  useEffect(() => {
+    if(article_list.message) message.info(article_list.message)
+  }, [article_list]);
 
   // 标题
-  const handleTitleChange = (e: any):void => {
-    setCurTitle(e.target.value)
-  }
+  const handleTitleChange = (e: any): void => {
+    setCurTitle(e.target.value);
+  };
 
   // 作者
-  const handleCurAuthor = (e: any):void => {
-    setCurAuthor(e.target.value)
-  }
+  const handleCurAuthor = (e: any): void => {
+    setCurAuthor(e.target.value);
+  };
 
   // 关键字
-  const handleCurKeyWord = (e: any):void => {
-    setCurKeyWord(e.target.value)
-  }
+  const handleCurKeyWord = (e: any): void => {
+    setCurKeyWord(e.target.value);
+  };
 
   // 描述
-  const handleCurDesc = (e: any):void => {
-    setCurDesc(e.target.value)
-  }
+  const handleCurDesc = (e: any): void => {
+    setCurDesc(e.target.value);
+  };
 
   // 封面连接
-  const handleCurImgUrl = (e: any):void => {
-    setCurImgUrl(e.target.value)
-  }
+  const handleCurImgUrl = (e: any): void => {
+    setCurImgUrl(e.target.value);
+  };
 
   // 选择发布状态
-  const handleCurIssue = (val: any):void => {
-    setCurIssue(val)
-  }
+  const handleCurIssue = (val: any): void => {
+    setCurIssue(val);
+  };
 
   // 选择文章类型
-  const handleCurArticleType = (val: any):void => {
-    setCurArticleType(val)
-  }
+  const handleCurArticleType = (val: any): void => {
+    setCurArticleType(val);
+  };
 
   // 选择文章转载状态
-  const handleCurReship = (val: any):void => {
-    setCurReship(val)
-  }
+  const handleCurReship = (val: any): void => {
+    setCurReship(val);
+  };
 
   // 标签选择
-  const handleCurTag = (e: any):void => {
-    setCurTag(e.target.value)
-  }
+  const handleCurTag = (val: any): void => {
+    setCurTag(val);
+    console.log(val);
+  };
 
   // 文章提交
-  const handleArticleSubmit = ():void => {
-    console.log(smde.value())
-  }
+  const handleArticleSubmit = (): void => {
+    const param = {
+      title: curTitle,
+      author: curAuthor,
+      desc: curDesc,
+      keyword: curKeyWord,
+      content: smde.value(),
+      tags: curTag.join(','),
+      img_url: curImgUrl,
+      state: curIssue,
+      origin: curReship,
+      type: curArticleType,
+    };
+
+    dispatch({
+      type: 'createArticleModel/addArticle',
+      payload: param,
+    });
+  };
 
   return (
     <div className={styles.create_article}>
-      <Alert message="请持之以恒！！！" type="success">
-      </Alert>
+      <Alert message="请持之以恒！！！" type="success"></Alert>
 
       <Input
         addonBefore="标题"
@@ -213,39 +243,32 @@ export const createArticle: FC<createArticleProps> = (props) => {
       </Select>
 
       <Select
-          allowClear
-          mode="multiple"
-          style={{ width: 200, marginLeft: 10, marginBottom: 20 }}
-          placeholder="标签"
-          value={curTag}
-          onChange={handleCurTag}
-        >
-          {/* {tag_list} */}
-        </Select>
+        allowClear
+        mode="multiple"
+        style={{ minWidth: 200 }}
+        placeholder="标签"
+        value={curTag}
+        onChange={handleCurTag}
+      >
+        {tagList.map(s => (
+          <Select.Option key={s._id} value={s._id}>
+            {s.name}
+          </Select.Option>
+        ))}
+      </Select>
 
       <TextArea id="editor"></TextArea>
 
-      <Button
-        type='primary'
-        className={styles.IssuArticle}
-        block
-        onClick={handleArticleSubmit}
-      >
-          发布文章
+      <Button type="primary" className={styles.IssuArticle} block onClick={handleArticleSubmit}>
+        发布文章
       </Button>
     </div>
   );
-}
+};
 
 export default connect(
-  ({
-    createArticleModel,
-    tags
-  }: {
-    createArticleModel: StateType,
-    tags: tagStateType
-  }) => ({
+  ({ createArticleModel, tags }: { createArticleModel: StateType; tags: tagStateType }) => ({
     article_list: createArticleModel.list,
-    tag_list: tags.tagList
-  })
+    tagList: tags.tagList,
+  }),
 )(createArticle);

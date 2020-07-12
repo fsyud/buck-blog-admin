@@ -29,33 +29,59 @@ const routers = [
             icon: 'smile',
             component: './Welcome',
           },
-          {
-            path: '/admin',
-            name: 'admin',
-            icon: 'crown',
-            component: './Admin',
-            authority: ['admin'],
-            routes: [
-              {
-                path: '/admin/sub-page',
-                name: 'sub-page',
-                icon: 'smile',
-                component: './Welcome',
-                authority: ['admin'],
-              },
-            ],
-          },
+          // {
+          //   path: '/admin',
+          //   name: 'admin',
+          //   icon: 'crown',
+          //   component: './Admin',
+          //   authority: ['admin'],
+          //   routes: [
+          //     {
+          //       path: '/admin/sub-page',
+          //       name: 'sub-page',
+          //       icon: 'smile',
+          //       component: './Welcome',
+          //       authority: ['admin'],
+          //     },
+          //   ],
+          // },
           {
             path: '/userList',
             name: '用户管理',
-            icon: 'smile',
+            icon: 'UserOutlined',
             component: './userList',
           },
           {
             path: '/timeLine',
             name: '时间轴',
-            icon: 'smile',
+            icon: 'ClusterOutlined',
             component: './timeLine',
+          },
+          {
+            path: '/art',
+            name: '文章',
+            icon: 'FileOutlined',
+            authority: ['buck'],
+            routes: [
+              {
+                path: '/art/article',
+                name: '文章',
+                icon: 'FileOutlined',
+                component: './art/article',
+              },
+              {
+                path: '/art/createarticle',
+                name: '文章创作',
+                icon: 'FileOutlined',
+                component: './art/createarticle',
+              },
+            ]
+          },
+          {
+            path: '/project',
+            name: '项目管理',
+            icon: 'ClusterOutlined',
+            component: './project',
           },
           {
             component: './404',

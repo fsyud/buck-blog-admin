@@ -12,15 +12,18 @@ import {
   Modal,
   Radio,
   Row,
+  message
 } from 'antd';
 
 import { findDOMNode } from 'react-dom';
+import request from 'umi-request'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { connect, Dispatch } from 'umi';
+import { connect, Dispatch, Link} from 'umi';
 import moment from 'moment';
 import OperationModal from './components/OperationModal';
 import { StateType } from './model';
-import { artDataList } from './data.d';
+import { tagStateType } from '@/models/tag';
+import { artDataList, updateArticleParam } from './data.d';
 import styles from './style.less';
 
 const RadioButton = Radio.Button;
@@ -31,6 +34,7 @@ interface ListBasicListThreeProps {
   article: StateType;
   dispatch: Dispatch;
   loading: boolean;
+  tagList: tagStateType;
 }
 
 const Info: FC<{
@@ -71,42 +75,67 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
   const {
     loading,
     dispatch,
-    article: { list }
+    article: { list, info },
+    tagList
   } = props;
 
   const [done, setDone] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [current, setCurrent] = useState<Partial<artDataList> | undefined>(undefined);
+  const [curId, setCurId] = useState<string>('');
 
   useEffect(() => {
+    initList()
+    // 获取标签列表
+    dispatch({
+      type: 'tags/getTagList',
+    });
+  }, [1]);
+
+  useEffect(() => {
+    if(info.message) {
+      message.info(info.message)
+      initList()
+    }
+  }, [info]);
+
+  const initList = (): void => {
     dispatch({
       type: 'article/fetch',
       payload: {
-        count: 5,
+        pageSize: 200,
       },
     });
-  }, [1]);
+  }
 
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: true,
-    pageSize: 5,
-    total: 50,
+    pageSize: 10,
+    total: list.length,
   };
 
-  const showModal = () => {
-    setVisible(true);
-    setCurrent(undefined);
-  };
-
+  // 文章编辑
   const showEditModal = (item: artDataList) => {
-    setVisible(true);
-    setCurrent(item);
+    const userId = item._id;
+    request.post('/api/queryArticleDetail',
+      {
+        data: { id: userId }
+      }
+    )
+    .then((res) => {
+      setCurrent(res);
+      setCurId(res.data._id)
+      setVisible(true);
+    })
+    .catch(error => {
+      console.log(error);
+    })
   };
 
   const deleteItem = (id: string) => {
     dispatch({
-      type: 'listBasicListThree/submit',
+      type: 'article/delArticle',
       payload: { id },
     });
   };
@@ -141,7 +170,6 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
     <Dropdown
       overlay={
         <Menu onClick={({ key }) => editAndDelete(key, item)}>
-          <Menu.Item key="edit">编辑</Menu.Item>
           <Menu.Item key="delete">删除</Menu.Item>
         </Menu>
       }
@@ -172,15 +200,17 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
     setVisible(false);
   };
 
-  const handleSubmit = (values: artDataList) => {
-    const id = current ? current._id : '';
-
+  const handleSubmit = (values: updateArticleParam) => {
     setAddBtnblur();
-
     setDone(true);
     dispatch({
-      type: 'listBasicListThree/submit',
-      payload: { id, ...values },
+      type: 'article/updateArt',
+      payload: {
+        id: curId,
+        ...values,
+        tags: values.tags.join(','),
+        keyword: values.keyword.join(','),
+      },
     });
   };
 
@@ -207,11 +237,10 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
             <Button
               type="dashed"
               style={{ width: '100%', marginBottom: 8 }}
-              onClick={showModal}
               ref={addBtn}
             >
               <PlusOutlined />
-              添加
+              <Link to="/art/createarticle">写文章</Link>
             </Button>
 
             <List
@@ -255,6 +284,7 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
         onDone={handleDone}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
+        tagList={tagList}
       />
     </div>
   );
@@ -264,13 +294,16 @@ export default connect(
   ({
     article,
     loading,
+    tags
   }: {
     article: StateType;
     loading: {
       models: { [key: string]: boolean };
     };
+    tags: tagStateType
   }) => ({
     article,
     loading: loading.models.article,
+    tagList: tags.tagList,
   }),
 )(ArticleList);

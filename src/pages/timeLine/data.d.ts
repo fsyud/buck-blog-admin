@@ -10,13 +10,11 @@ export interface timeListItem {
   _id: string;
 }
 
-export interface Member {
-  count: Number;
-  list: timeListItem[]
-}
-
 export interface BasicListItemDataType {
   code: Number;
   message: string;
-  data: Member[];
+  data: {
+    count: Number;
+    list: timeListItem[]
+  }
 }

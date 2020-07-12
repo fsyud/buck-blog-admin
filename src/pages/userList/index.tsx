@@ -12,6 +12,7 @@ import {
   Modal,
   Radio,
   Row,
+  message
 } from 'antd';
 
 import { findDOMNode } from 'react-dom';
@@ -76,7 +77,7 @@ export const userList: FC<ListBasicListProps> = (props) => {
   const {
     loading,
     dispatch,
-    userBasicList: { list }
+    userBasicList: { list, info }
   } = props;
 
   const [done, setDone] = useState<boolean>(false);
@@ -84,16 +85,31 @@ export const userList: FC<ListBasicListProps> = (props) => {
   const [current, setCurrent] = useState<Partial<ListItem> | undefined>(undefined);
 
   useEffect(() => {
+    initList()
+  }, []);
+
+  useEffect(() => {
+    console.log(info)
+    if(info.message) {
+      message.info(info.message)
+      dispatch({
+        type: 'userBasicList/fetch',
+        payload: {}
+      });
+    }
+  }, [info])
+
+  const initList = (): void => {
     dispatch({
       type: 'userBasicList/fetch',
       payload: {}
     });
-  }, []);
+  }
 
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: true,
-    pageSize: 5,
+    pageSize: 10,
     total: list.length,
   };
 
@@ -109,7 +125,7 @@ export const userList: FC<ListBasicListProps> = (props) => {
 
   const deleteItem = (id: string) => {
     dispatch({
-      type: 'listBasicList/submit',
+      type: 'userBasicList/delete',
       payload: { id },
     });
   };
@@ -194,7 +210,7 @@ export const userList: FC<ListBasicListProps> = (props) => {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="用户列表个数" value="8个" bordered />
+                <Info title="用户列表个数" value={list.length} bordered />
               </Col>
             </Row>
           </Card>
