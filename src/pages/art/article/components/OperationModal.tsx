@@ -56,7 +56,14 @@ const OperationModal: FC<OperationModalProps> = (props) => {
 
   const handleFinish = (values: { [key: string]: any }) => {
     if (onSubmit) {
-      const curVal = Object.assign({}, values, {tags: curTag})
+      const tag = curTag.map((s: any) => {
+        const tagId = curTagList.filter((el: any) =>
+          s === el.name || s === el._id
+        );
+        return tagId[0]._id
+      })
+      const curVal = Object.assign({}, values, {tags: tag})
+      console.log(curVal)
       onSubmit(curVal as updateArticleParam);
     }
   };

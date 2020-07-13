@@ -250,11 +250,11 @@ export const createArticle: FC<createArticleProps> = props => {
         value={curTag}
         onChange={handleCurTag}
       >
-        {tagList.map(s => (
+        {tagList ? tagList.map(s => (
           <Select.Option key={s._id} value={s._id}>
             {s.name}
           </Select.Option>
-        ))}
+        )) : []}
       </Select>
 
       <TextArea id="editor"></TextArea>
@@ -269,6 +269,6 @@ export const createArticle: FC<createArticleProps> = props => {
 export default connect(
   ({ createArticleModel, tags }: { createArticleModel: StateType; tags: tagStateType }) => ({
     article_list: createArticleModel.list,
-    tagList: tags.tagList,
+    tagList: tags,
   }),
 )(createArticle);
