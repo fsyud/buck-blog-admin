@@ -1,4 +1,4 @@
-import { Alert, Checkbox, message } from 'antd';
+import { Alert, Checkbox, notification } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { Link, connect, Dispatch } from 'umi';
 import { StateType } from '@/models/login';
@@ -37,17 +37,26 @@ const Login: React.FC<LoginProps> = (props) => {
 
   useEffect(() => {
     const loginSta = props.userLogin && props.userLogin.successLogin
+
+    if(loginSta && loginSta.data) {
+      if(loginSta.data.type && loginSta.data.type + '' !== '0'){
+        notification.error({
+          message: '非管理员用户不能登陆！！'
+        });
+        return;
+      }
+    }
     if(loginSta && loginSta.message){
       setWarn(loginSta.message)
-      // message(loginSta.message)
     }
-
     if(loginSta && loginSta.data) {
       if(Object.keys(loginSta.data)) {
         sessionStorageSet('userInfo', loginSta.data)
       }
     }
   },[props.userLogin])
+
+
 
   const handleSubmit = (values: LoginParamsType) => {
     const { dispatch } = props;

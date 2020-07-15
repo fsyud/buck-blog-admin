@@ -71,40 +71,11 @@ const OperationModal: FC<OperationModalProps> = (props) => {
     return (
       <Form {...formLayout} form={form} onFinish={handleFinish}>
         <Form.Item
-          name="title"
-          label="任务名称"
+          name="name"
+          label="用户名"
           rules={[{ required: true, message: '请输入任务名称' }]}
         >
           <Input placeholder="请输入" />
-        </Form.Item>
-        <Form.Item
-          name="createdAt"
-          label="开始时间"
-          rules={[{ required: true, message: '请选择开始时间' }]}
-        >
-          <DatePicker
-            showTime
-            placeholder="请选择"
-            format="YYYY-MM-DD HH:mm:ss"
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="owner"
-          label="任务负责人"
-          rules={[{ required: true, message: '请选择任务负责人' }]}
-        >
-          <Select placeholder="请选择">
-            <Select.Option value="付晓晓">付晓晓</Select.Option>
-            <Select.Option value="周毛毛">周毛毛</Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          name="subDescription"
-          label="产品描述"
-          rules={[{ message: '请输入至少五个字符的产品描述！', min: 5 }]}
-        >
-          <TextArea rows={4} placeholder="请输入至少五个字符" />
         </Form.Item>
       </Form>
     );

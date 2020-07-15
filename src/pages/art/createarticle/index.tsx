@@ -7,7 +7,8 @@ import highlight from 'highlight.js';
 import styles from './style.less';
 import { StateType } from './model';
 import { articleDetailist } from './data.d'
-import { tagStateType } from '@/models/tag';
+import { tagStateType } from '@/pages/taglist/model';
+import { tag_list } from '@/pages/taglist/data.d';
 import './marked.css';
 import 'simplemde/dist/simplemde.min.css';
 import './monokai_sublime.css';
@@ -16,7 +17,7 @@ const { TextArea } = Input;
 interface createArticleProps {
   dispatch: Dispatch;
   article_list: articleDetailist;
-  tagList: tagStateType;
+  list: tag_list[];
 }
 
 // 富文本工具配置
@@ -44,7 +45,7 @@ export const createArticle: FC<createArticleProps> = props => {
   const {
     dispatch,
     article_list,
-    tagList: { tagList },
+    list
   } = props;
 
   const [curTitle, setCurTitle] = useState<string>('');
@@ -87,7 +88,7 @@ export const createArticle: FC<createArticleProps> = props => {
   // 请求标签
   useEffect(() => {
     dispatch({
-      type: 'tags/getTagList',
+      type: 'taglist/getTagList',
     });
   }, [1]);
 
@@ -250,7 +251,7 @@ export const createArticle: FC<createArticleProps> = props => {
         value={curTag}
         onChange={handleCurTag}
       >
-        {tagList ? tagList.map(s => (
+        {list ? list.map(s => (
           <Select.Option key={s._id} value={s._id}>
             {s.name}
           </Select.Option>
@@ -267,8 +268,8 @@ export const createArticle: FC<createArticleProps> = props => {
 };
 
 export default connect(
-  ({ createArticleModel, tags }: { createArticleModel: StateType; tags: tagStateType }) => ({
+  ({ createArticleModel, taglist }: { createArticleModel: StateType; taglist: tagStateType }) => ({
     article_list: createArticleModel.list,
-    tagList: tags,
+    list: taglist.list,
   }),
 )(createArticle);

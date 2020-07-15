@@ -208,8 +208,7 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
       payload: {
         id: curId,
         ...values,
-        tags: values.tags.join(','),
-        keyword: values.keyword.join(','),
+        tags: values.tags.join(',')
       },
     });
   };

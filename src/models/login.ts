@@ -38,13 +38,12 @@ const Model: LoginModelType = {
       });
 
       // Login successfully
-      if (Object.keys(response.data).length > 0) {
+      if (Object.keys(response.data).length > 0 && response.data.type + '' === '0') {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
-          console.log(redirectUrlParams)
           if (redirectUrlParams.origin === urlParams.origin) {
             redirect = redirect.substr(urlParams.origin.length);
             if (redirect.match(/^\/.*#/)) {
@@ -55,7 +54,6 @@ const Model: LoginModelType = {
             return;
           }
         }
-        console.log(redirect)
         history.replace(redirect || '/');
       }
     },

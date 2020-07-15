@@ -31,11 +31,11 @@ export function _onCreate(options = {}) {
   app.model({ namespace: 'global', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/models/global.ts').default) });
 app.model({ namespace: 'login', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/models/login.ts').default) });
 app.model({ namespace: 'setting', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/models/setting.ts').default) });
-app.model({ namespace: 'tag', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/models/tag.ts').default) });
 app.model({ namespace: 'user', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/models/user.ts').default) });
 app.model({ namespace: 'model', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/pages/art/article/model.ts').default) });
 app.model({ namespace: 'model', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/pages/art/createarticle/model.ts').default) });
 app.model({ namespace: 'model', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/pages/project/model.ts').default) });
+app.model({ namespace: 'model', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/pages/taglist/model.ts').default) });
 app.model({ namespace: 'model', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/pages/timeLine/model.ts').default) });
 app.model({ namespace: 'model', ...(require('/Volumes/WorkSpace/Buck-blog-admin/src/pages/userList/model.ts').default) });
   return app;

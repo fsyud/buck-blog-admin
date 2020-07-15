@@ -85,6 +85,13 @@ const routes = [
             "exact": true
           },
           {
+            "path": "/taglist",
+            "name": "标签管理",
+            "icon": "ClusterOutlined",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__taglist' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/taglist'), loading: require('@/components/PageLoading/index').default}),
+            "exact": true
+          },
+          {
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__404' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/404'), loading: require('@/components/PageLoading/index').default}),
             "exact": true
           }

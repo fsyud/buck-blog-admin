@@ -84,6 +84,12 @@ const routers = [
             component: './project',
           },
           {
+            path: '/taglist',
+            name: '标签管理',
+            icon: 'ClusterOutlined',
+            component: './taglist',
+          },
+          {
             component: './404',
           },
         ],
