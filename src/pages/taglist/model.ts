@@ -4,7 +4,7 @@ import { queryTagList, addTag, delTag } from './service';
 import { tagDataList, tag_list } from './data.d';
 
 export interface tagStateType {
-  list: tag_list[];
+  listTag: tag_list[];
   info: Partial<tagDataList>;
 }
 
@@ -26,7 +26,7 @@ const Model: ModelType = {
   namespace: 'taglist',
 
   state: {
-    list: [],
+    listTag: [],
     info: {}
   },
 
@@ -61,13 +61,13 @@ const Model: ModelType = {
   },
 
   reducers: {
-    queryList(state = { list: [], info: {} }, action) {
+    queryList(state = { listTag: [], info: {} }, action) {
       return {
         ...state,
-        list: action.payload,
+        listTag: action.payload,
       };
     },
-    Info(state = { list: [], info: {} }, action) {
+    Info(state = { listTag: [], info: {} }, action) {
       return {
         ...state,
         info: action.payload,

@@ -90,6 +90,12 @@ const routers = [
             component: './taglist',
           },
           {
+            path: '/message',
+            name: '留言板管理',
+            icon: 'ClusterOutlined',
+            component: './message',
+          },
+          {
             component: './404',
           },
         ],

@@ -22,7 +22,8 @@ import { connect, Dispatch, Link} from 'umi';
 import moment from 'moment';
 import OperationModal from './components/OperationModal';
 import { StateType } from './model';
-import { tagStateType } from '@/models/tag';
+import { tag_list } from '@/pages/taglist/data.d';
+import { tagStateType } from '@/pages/taglist/model';
 import { artDataList, updateArticleParam } from './data.d';
 import styles from './style.less';
 
@@ -34,7 +35,7 @@ interface ListBasicListThreeProps {
   article: StateType;
   dispatch: Dispatch;
   loading: boolean;
-  tagList: tagStateType;
+  listTag: tag_list[];
 }
 
 const Info: FC<{
@@ -76,7 +77,7 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
     loading,
     dispatch,
     article: { list, info },
-    tagList
+    listTag
   } = props;
 
   const [done, setDone] = useState<boolean>(false);
@@ -88,7 +89,7 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
     initList()
     // 获取标签列表
     dispatch({
-      type: 'tags/getTagList',
+      type: 'taglist/getTagList',
     });
   }, [1]);
 
@@ -208,7 +209,8 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
       payload: {
         id: curId,
         ...values,
-        tags: values.tags.join(',')
+        tags: values.tags.join(','),
+        keyword: values.keyword.join(',')
       },
     });
   };
@@ -283,7 +285,7 @@ export const ArticleList: FC<ListBasicListThreeProps> = (props) => {
         onDone={handleDone}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
-        tagList={tagList}
+        tagList={listTag}
       />
     </div>
   );
@@ -293,16 +295,16 @@ export default connect(
   ({
     article,
     loading,
-    tags
+    taglist
   }: {
     article: StateType;
     loading: {
       models: { [key: string]: boolean };
     };
-    tags: tagStateType
+    taglist: tagStateType
   }) => ({
     article,
     loading: loading.models.article,
-    tagList: tags.tagList,
+    listTag: taglist.listTag,
   }),
 )(ArticleList);

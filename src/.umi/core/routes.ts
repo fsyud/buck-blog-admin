@@ -92,6 +92,13 @@ const routes = [
             "exact": true
           },
           {
+            "path": "/message",
+            "name": "留言板管理",
+            "icon": "ClusterOutlined",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__message' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/message'), loading: require('@/components/PageLoading/index').default}),
+            "exact": true
+          },
+          {
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__404' */'/Volumes/WorkSpace/Buck-blog-admin/src/pages/404'), loading: require('@/components/PageLoading/index').default}),
             "exact": true
           }

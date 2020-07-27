@@ -17,7 +17,7 @@ const { TextArea } = Input;
 interface createArticleProps {
   dispatch: Dispatch;
   article_list: articleDetailist;
-  list: tag_list[];
+  listTag: tag_list[];
 }
 
 // 富文本工具配置
@@ -45,7 +45,7 @@ export const createArticle: FC<createArticleProps> = props => {
   const {
     dispatch,
     article_list,
-    list
+    listTag
   } = props;
 
   const [curTitle, setCurTitle] = useState<string>('');
@@ -251,7 +251,7 @@ export const createArticle: FC<createArticleProps> = props => {
         value={curTag}
         onChange={handleCurTag}
       >
-        {list ? list.map(s => (
+        {listTag ? listTag.map(s => (
           <Select.Option key={s._id} value={s._id}>
             {s.name}
           </Select.Option>
@@ -270,6 +270,6 @@ export const createArticle: FC<createArticleProps> = props => {
 export default connect(
   ({ createArticleModel, taglist }: { createArticleModel: StateType; taglist: tagStateType }) => ({
     article_list: createArticleModel.list,
-    list: taglist.list,
+    listTag: taglist.listTag,
   }),
 )(createArticle);

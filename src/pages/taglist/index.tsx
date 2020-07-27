@@ -67,7 +67,7 @@ export const tagComponent: FC<ListBasicListProps> = (props) => {
   const {
     loading,
     dispatch,
-    taglist: { list, info },
+    taglist: { listTag, info },
   } = props;
 
   const [done, setDone] = useState<boolean>(false);
@@ -95,7 +95,7 @@ export const tagComponent: FC<ListBasicListProps> = (props) => {
     showSizeChanger: true,
     showQuickJumper: true,
     pageSize: 5,
-    total: list.length,
+    total: listTag.length,
   };
 
   const showModal = () => {
@@ -200,7 +200,7 @@ export const tagComponent: FC<ListBasicListProps> = (props) => {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="列表数" value={list.length} bordered />
+                <Info title="列表数" value={listTag.length} bordered />
               </Col>
             </Row>
           </Card>
@@ -228,7 +228,7 @@ export const tagComponent: FC<ListBasicListProps> = (props) => {
               rowKey="id"
               loading={loading}
               pagination={paginationProps}
-              dataSource={list}
+              dataSource={listTag}
               renderItem={(item) => (
                 <List.Item
                   actions={[

@@ -25,18 +25,3 @@ export async function delUser(params: deleteParam) {
     data : params
   })
 }
-
-// export async function removeFakeList(params: ParamsType) {
-//   const { count = 5, ...restParams } = params;
-//   return request('/api/fake_list', {
-//     method: 'POST',
-//     params: {
-//       count,
-//     },
-//     data: {
-//       ...restParams,
-//       method: 'delete',
-//     },
-//   });
-// }
-
